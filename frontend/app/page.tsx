@@ -8,10 +8,12 @@ import HeroSlideshow from '@/components/HeroSlideshow';
 import SiteFooter from '@/components/SiteFooter';
 import ScrollReveal from '@/components/ScrollReveal';
 import SplitText from '@/components/SplitText';
+import ClickSpark from '@/components/ClickSpark';
 import { STAGGERED_MENU_ITEMS, STAGGERED_SOCIAL_ITEMS } from '@/lib/setu-data';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 import { useAuthModal } from '@/context/AuthModalContext';
+import ImageMarqueeGallery from '@/components/ImageMarqueeGallery';
 
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
@@ -75,85 +77,94 @@ export default function Home() {
         >
           {/* Background layer — zooms in as user scrolls */}
           <motion.div
-            className="absolute inset-0 will-change-transform"
+            className="absolute inset-0 will-change-transform pointer-events-none"
             style={{ scale: bgScale, opacity: bgOpacity }}
           >
             <HeroSlideshow />
           </motion.div>
 
-          {/* Hero content — rises + fades on scroll */}
-          <motion.div
-            className="relative z-10 max-w-4xl mx-auto my-auto text-center flex flex-col items-center"
-            style={{ y: contentY, opacity: contentOpacity }}
+          <ClickSpark
+            sparkColor="#9de7cf"
+            sparkSize={12}
+            sparkRadius={20}
+            sparkCount={8}
+            duration={400}
+            className="relative z-10 flex flex-col justify-between flex-1"
           >
-            {/* Live Status Indicator */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono uppercase tracking-[0.14em] text-white/90 mb-8">
-              <span className="inline-block w-2 h-2 rounded-full bg-[#51cb9e] shadow-[0_0_0_4px_rgba(81,203,158,0.3)]" />
-              <span>A closed loop for real-world change</span>
-            </div>
+            {/* Hero content — rises + fades on scroll */}
+            <motion.div
+              className="relative z-10 max-w-4xl mx-auto my-auto text-center flex flex-col items-center"
+              style={{ y: contentY, opacity: contentOpacity }}
+            >
+              {/* Live Status Indicator */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-mono uppercase tracking-[0.14em] text-white/90 mb-8">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#51cb9e] shadow-[0_0_0_4px_rgba(81,203,158,0.3)]" />
+                <span>A closed loop for real-world change</span>
+              </div>
 
-            {/* Headline — SplitText word-by-word reveal */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.98] text-white drop-shadow-md" aria-label="Where people feel the problem, change should begin.">
-              <SplitText
-                text="Where people feel the problem,"
-                className="block"
-                splitType="words"
-                from={{ opacity: 0, y: 32 }}
-                to={{ opacity: 1, y: 0 }}
-                delay={60}
-                duration={0.9}
-                ease="power3.out"
-                threshold={0.01}
-                rootMargin="0px"
-              />
-              <SplitText
-                text="change should begin."
-                className="block font-serif italic font-normal text-[#b9f2df] tracking-tight"
-                splitType="words"
-                from={{ opacity: 0, y: 32 }}
-                to={{ opacity: 1, y: 0 }}
-                delay={60}
-                duration={0.9}
-                ease="power3.out"
-                threshold={0.01}
-                rootMargin="0px"
-              />
-            </h1>
+              {/* Headline — SplitText word-by-word reveal */}
+              <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[0.98] text-white drop-shadow-md" aria-label="Where people feel the problem, change should begin.">
+                <SplitText
+                  text="Where people feel the problem,"
+                  className="block"
+                  splitType="words"
+                  from={{ opacity: 0, y: 32 }}
+                  to={{ opacity: 1, y: 0 }}
+                  delay={60}
+                  duration={0.9}
+                  ease="power3.out"
+                  threshold={0.01}
+                  rootMargin="0px"
+                />
+                <SplitText
+                  text="change should begin."
+                  className="block font-serif italic font-normal text-[#b9f2df] tracking-tight"
+                  splitType="words"
+                  from={{ opacity: 0, y: 32 }}
+                  to={{ opacity: 1, y: 0 }}
+                  delay={60}
+                  duration={0.9}
+                  ease="power3.out"
+                  threshold={0.01}
+                  rootMargin="0px"
+                />
+              </h1>
 
-            {/* Lede */}
-            <p className="mt-7 sm:mt-8 max-w-2xl text-base sm:text-lg md:text-xl text-white/85 font-light leading-relaxed">
-              From a village water point to a crowded city street, SETU connects lived
-              experiences with the people, knowledge, and resources needed to create lasting solutions.
-            </p>
+              {/* Lede */}
+              <p className="mt-7 sm:mt-8 max-w-2xl text-base sm:text-lg md:text-xl text-white/85 font-light leading-relaxed">
+                From a village water point to a crowded city street, SETU connects lived
+                experiences with the people, knowledge, and resources needed to create lasting solutions.
+              </p>
 
-            {/* CTAs */}
-            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-              <Link
-                href="/how-it-works"
-                className="inline-flex items-center gap-2 bg-[#9de7cf] hover:bg-[#85e1c4] text-[#0c1712] font-semibold px-6 sm:px-8 py-3.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all shadow-lg hover:shadow-xl"
-              >
-                <span>Discover How SETU Works</span>
-                <ArrowUpRight className="size-4" />
-              </Link>
-              <Link
-                href="/contact?reason=share-challenge"
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 hover:border-white font-medium px-6 sm:px-8 py-3.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all"
-              >
-                <span>Share a Challenge</span>
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </motion.div>
+              {/* CTAs */}
+              <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+                <Link
+                  href="/how-it-works"
+                  className="inline-flex items-center gap-2 bg-[#9de7cf] hover:bg-[#85e1c4] text-[#0c1712] font-semibold px-6 sm:px-8 py-3.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all shadow-lg hover:shadow-xl"
+                >
+                  <span>Discover How SETU Works</span>
+                  <ArrowUpRight className="size-4" />
+                </Link>
+                <Link
+                  href="/contact?reason=share-challenge"
+                  className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 hover:border-white font-medium px-6 sm:px-8 py-3.5 rounded-full text-xs font-mono uppercase tracking-wider transition-all"
+                >
+                  <span>Share a Challenge</span>
+                  <ArrowRight className="size-4" />
+                </Link>
+              </div>
+            </motion.div>
 
-          {/* Bottom meta bar */}
-          <motion.div
-            className="relative z-10 w-full flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] font-mono tracking-[0.16em] uppercase text-white/70 border-t border-white/15 pt-5"
-            style={{ opacity: contentOpacity }}
-          >
-            <span className="text-[#9de7cf] font-semibold">LISTEN FIRST</span>
-            <span>LOCAL VOICES START THE LOOP</span>
-            <span className="hidden md:inline">COMMUNITY → COLLABORATION → CHANGE</span>
-          </motion.div>
+            {/* Bottom meta bar */}
+            <motion.div
+              className="relative z-10 w-full flex flex-col sm:flex-row justify-between items-center gap-2 text-[10px] font-mono tracking-[0.16em] uppercase text-white/70 border-t border-white/15 pt-5"
+              style={{ opacity: contentOpacity }}
+            >
+              <span className="text-[#9de7cf] font-semibold">LISTEN FIRST</span>
+              <span>LOCAL VOICES START THE LOOP</span>
+              <span className="hidden md:inline">COMMUNITY → COLLABORATION → CHANGE</span>
+            </motion.div>
+          </ClickSpark>
         </section>
 
         {/* =====================================================================
@@ -316,6 +327,44 @@ export default function Home() {
               </Link>
             </div>
           </ScrollReveal>
+        </section>
+
+        {/* =====================================================================
+            SECTION 05: FIELD ACTION & MASONRY GALLERY (WITH MARQUEE MIDDLE COLUMN)
+            ===================================================================== */}
+        <section
+          id="field-action"
+          className="py-24 sm:py-32 bg-[#f5f6f1] border-t border-[#d9ddd5] relative overflow-hidden"
+          aria-label="Ground Evidence & Field Action"
+        >
+          <div className="section-shell mb-12 sm:mb-16">
+            <ScrollReveal>
+              <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                <div>
+                  <p className="eyebrow text-[#267f68] mb-3">GROUND EVIDENCE & FIELD ACTION</p>
+                  <h2 className="text-3xl sm:text-5xl font-bold tracking-tight leading-tight text-[#101312]">
+                    Field challenges meeting{' '}
+                    <br className="hidden sm:inline" />
+                    <em
+                      className="font-normal text-[#267f68]"
+                      style={{ fontFamily: 'var(--font-lora), Georgia, serif', fontStyle: 'italic' }}
+                    >
+                      real-world engineering.
+                    </em>
+                  </h2>
+                </div>
+                <div className="max-w-md">
+                  <p className="text-sm sm:text-base text-[#59615c] leading-relaxed">
+                    A live window into real community challenges, university research squads, and verified societal pilots moving from problem to proof across India.
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <ImageMarqueeGallery />
+          </div>
         </section>
       </main>
 

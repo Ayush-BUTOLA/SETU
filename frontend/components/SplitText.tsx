@@ -7,10 +7,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 // Local useGSAP hook (avoids @gsap/react dependency)
-function useGSAP(fn: () => (() => void) | void, opts?: { scope?: React.RefObject<any>; dependencies?: any[] }) {
+function useGSAP(
+  fn: () => (() => void) | void,
+  opts?: { scope?: React.RefObject<any>; dependencies?: any[] }
+) {
   useEffect(() => {
     return fn() || undefined;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, opts?.dependencies ?? []);
 }
 
@@ -49,10 +52,14 @@ export default function SplitText({
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    if (document.fonts.status === 'loaded') {
-      setFontsLoaded(true);
+    if (typeof document !== 'undefined' && document.fonts) {
+      if (document.fonts.status === 'loaded') {
+        setFontsLoaded(true);
+      } else {
+        document.fonts.ready.then(() => setFontsLoaded(true)).catch(() => setFontsLoaded(true));
+      }
     } else {
-      document.fonts.ready.then(() => setFontsLoaded(true));
+      setFontsLoaded(true);
     }
   }, []);
 
@@ -81,22 +88,44 @@ export default function SplitText({
 
       const unitEls = el.querySelectorAll<HTMLElement>('.rb-split-unit');
 
+      // Set initial hidden transform state
       gsap.set(unitEls, from);
 
-      ScrollTrigger.create({
-        trigger: el,
-        start: `top bottom${rootMargin}`,
-        once: true,
-        onEnter: () => {
-          gsap.to(unitEls, {
-            ...to,
-            duration,
-            ease,
-            stagger: delay / 1000,
-            onComplete: onLetterAnimationComplete,
-          });
-        },
-      });
+      // Check if element is already in viewport on mount (e.g. above-the-fold Hero text)
+      const rect = el.getBoundingClientRect();
+      const inViewportOnLoad = rect.top < window.innerHeight && rect.bottom > 0;
+
+      if (inViewportOnLoad) {
+        // Element is visible immediately on load — animate without requiring scroll!
+        gsap.to(unitEls, {
+          ...to,
+          duration,
+          ease,
+          stagger: delay / 1000,
+          onComplete: onLetterAnimationComplete,
+        });
+      } else {
+        // Element is below the fold — trigger on scroll into view
+        const trigger = ScrollTrigger.create({
+          trigger: el,
+          start: `top bottom${rootMargin}`,
+          once: true,
+          onEnter: () => {
+            gsap.to(unitEls, {
+              ...to,
+              duration,
+              ease,
+              stagger: delay / 1000,
+              onComplete: onLetterAnimationComplete,
+            });
+          },
+        });
+
+        // Ensure ScrollTrigger measures positions accurately
+        ScrollTrigger.refresh();
+
+        return () => trigger.kill();
+      }
     },
     { scope: ref, dependencies: [text, fontsLoaded, delay, duration, ease, splitType] }
   );
@@ -107,6 +136,8 @@ export default function SplitText({
       className={className}
       style={{ textAlign: textAlign as React.CSSProperties['textAlign'], willChange: 'transform' }}
       aria-label={text}
-    />
+    >
+      {text}
+    </Tag>
   );
 }

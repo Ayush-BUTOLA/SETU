@@ -2,20 +2,14 @@
 
 import React, { Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import AuthSwitch from '@/components/ui/auth-switch';
-import { ArrowLeft, ShieldCheck } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 function LoginContent() {
-  const searchParams = useSearchParams();
-  const roleParam = searchParams.get('role');
-
-  const role = roleParam || 'Citizen / Community';
-
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex flex-col justify-between p-4 sm:p-6 md:p-8 relative overflow-hidden font-sans">
       {/* Top Bar Header */}
-      <header className="relative z-20 flex items-center justify-between max-w-[900px] mx-auto w-full mb-4">
+      <header className="relative z-20 flex items-center justify-between max-w-[900px] mx-auto w-full mb-3">
         <Link
           href="/"
           className="flex items-center gap-2.5 font-bold tracking-wider text-sm text-white hover:opacity-90 transition-opacity drop-shadow"
@@ -27,13 +21,7 @@ function LoginContent() {
           <span className="tracking-[0.16em] font-extrabold text-[14px]">SETU</span>
         </Link>
 
-        <div className="flex items-center gap-3">
-          {/* Persona Badge */}
-          <div className="hidden sm:flex items-center gap-2 bg-white/20 backdrop-blur-md border border-white/30 px-3.5 py-1.5 rounded-full text-xs text-white font-medium shadow-sm">
-            <ShieldCheck className="size-3.5 text-white" />
-            <span>Persona: <strong className="underline underline-offset-2">{role}</strong></span>
-          </div>
-
+        <div className="flex items-center gap-2.5">
           <Link
             href="/"
             className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/30 text-white text-xs px-3.5 py-1.5 rounded-full font-mono uppercase tracking-wider transition-colors shadow-sm"
@@ -45,8 +33,8 @@ function LoginContent() {
       </header>
 
       {/* Center 21st.dev AuthSwitch Card */}
-      <main className="relative z-20 flex-1 flex items-center justify-center my-auto py-2">
-        <AuthSwitch role={role} />
+      <main className="relative z-20 flex-1 flex items-center justify-center my-auto py-4">
+        <AuthSwitch />
       </main>
 
       {/* Footer minimal info */}

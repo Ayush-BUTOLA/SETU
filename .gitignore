@@ -40,5 +40,4 @@ next-env.d.ts
 .vercel/
 *.pem
 *.tmp
-asstes/
-skill
+

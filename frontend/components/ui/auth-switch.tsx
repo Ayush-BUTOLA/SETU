@@ -34,6 +34,8 @@ export const Component = () => {
   );
 };
 
+import { DEMO_ACCOUNTS, getDashboardPathByRole, getAccountByEmailOrRole } from "@/lib/auth-config";
+
 export interface AuthSwitchProps {
   role?: string;
   onSuccess?: (role: string, email: string) => void;
@@ -50,6 +52,8 @@ export function AuthSwitch({
   className,
 }: AuthSwitchProps) {
   const [isSignUp, setIsSignUp] = useState(false);
+  const demoAccount = DEMO_ACCOUNTS[role] || DEMO_ACCOUNTS['Citizen / Community'];
+
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [signUpUsername, setSignUpUsername] = useState("");
@@ -67,11 +71,24 @@ export function AuthSwitch({
       toast.error("Please enter your password");
       return;
     }
-    toast.success(`Signed in as ${role}!`);
-    onSuccess?.(role, signInEmail);
+    const matchedAccount = getAccountByEmailOrRole(signInEmail, role);
+    const dest = matchedAccount.dashboardPath;
+    try {
+      localStorage.setItem('setu_user', JSON.stringify({
+        role: matchedAccount.role,
+        email: signInEmail,
+        name: matchedAccount.name,
+        organization: matchedAccount.organization,
+        loggedInAt: new Date().toISOString(),
+      }));
+    } catch {
+      // ignore
+    }
+    toast.success(`Access granted! Loading ${matchedAccount.role} Dashboard...`);
+    onSuccess?.(matchedAccount.role, signInEmail);
     setTimeout(() => {
-      router.push("/");
-    }, 1000);
+      router.push(dest);
+    }, 600);
   };
 
   const handleSignUp = (e: React.FormEvent) => {
@@ -88,18 +105,42 @@ export function AuthSwitch({
       toast.error("Please enter a password");
       return;
     }
-    toast.success(`Account created for ${role}!`);
+    const dest = getDashboardPathByRole(role);
+    try {
+      localStorage.setItem('setu_user', JSON.stringify({
+        role,
+        email: signUpEmail,
+        name: signUpUsername,
+        organization: demoAccount.organization,
+        loggedInAt: new Date().toISOString(),
+      }));
+    } catch {
+      // ignore
+    }
+    toast.success(`Account registered! Loading ${role} Dashboard...`);
     onSuccess?.(role, signUpEmail);
     setTimeout(() => {
-      router.push("/");
-    }, 1000);
+      router.push(dest);
+    }, 600);
   };
 
   const handleSocialClick = (platform: string) => {
-    toast.info(`Authenticating via ${platform}...`);
+    const dest = getDashboardPathByRole(role);
+    toast.info(`Connecting via ${platform}...`);
     setTimeout(() => {
-      toast.success(`Connected via ${platform} as ${role}`);
-      setTimeout(() => router.push("/"), 800);
+      try {
+        localStorage.setItem('setu_user', JSON.stringify({
+          role,
+          email: `${platform.toLowerCase()}@setu.org`,
+          name: demoAccount.name,
+          organization: demoAccount.organization,
+          loggedInAt: new Date().toISOString(),
+        }));
+      } catch {
+        // ignore
+      }
+      toast.success(`Connected as ${role}`);
+      setTimeout(() => router.push(dest), 500);
     }, 600);
   };
 
