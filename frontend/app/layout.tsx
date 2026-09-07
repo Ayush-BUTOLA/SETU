@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, DM_Mono, Lora } from "next/font/google";
 import { Toaster } from "sonner";
 import { AuthModalProvider } from "@/context/AuthModalContext";
+import LenisProvider from "@/components/LenisProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -42,11 +43,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${dmMono.variable} ${lora.variable} scroll-smooth`}
+      className={`${manrope.variable} ${dmMono.variable} ${lora.variable}`}
+      suppressHydrationWarning
     >
-      <body className="min-h-screen bg-[#f5f6f1] text-[#101312] antialiased selection:bg-[#9de7cf] selection:text-[#090b0b]">
+      <body
+        className="min-h-screen bg-[#f5f6f1] text-[#101312] antialiased selection:bg-[#9de7cf] selection:text-[#090b0b]"
+        suppressHydrationWarning
+      >
         <AuthModalProvider>
-          {children}
+          <LenisProvider>
+            {children}
+          </LenisProvider>
         </AuthModalProvider>
         <Toaster richColors position="top-right" />
       </body>
