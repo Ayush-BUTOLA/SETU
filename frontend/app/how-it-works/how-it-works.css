@@ -1,0 +1,2127 @@
+/* Intentionally scoped: no global resets, body styles or shared UI overrides. */
+
+.setu-how {
+  padding-top: 72px;
+  --setu-scroll-offset: 84px;
+  --paper: #f5f6f1;
+  --white: #ffffff;
+  --ink: #101312;
+  --muted: #5c685f;
+  --line: #d9ddd5;
+  --green: #267f68;
+  --green-soft: #edf3e9;
+  --lime: #9de7cf;
+  --dark: #101312;
+  --water: #b6dce2;
+
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-manrope), "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  isolation: isolate;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+}
+
+.setu-how *,
+.setu-how *::before,
+.setu-how *::after {
+  box-sizing: border-box;
+}
+
+.setu-how :where(h1, h2, h3, h4, p, blockquote, ol, ul, dl, dd) {
+  margin: 0;
+}
+
+.setu-how :where(ol, ul) {
+  padding: 0;
+}
+
+.setu-how button,
+.setu-how a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.setu-how button {
+  font: inherit;
+}
+
+.setu-how a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.setu-how button,
+.setu-how a {
+  touch-action: manipulation;
+}
+
+.setu-how :is(a, button):focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 6px;
+}
+
+.setu-how .setu-cta a:focus-visible {
+  outline-color: var(--lime);
+}
+
+.setu-how :is(section, [id]) {
+  scroll-margin-top: var(--setu-scroll-offset, 96px);
+}
+
+.setu-how ::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.setu-how .setu-container {
+  width: min(100% - 96px, 1240px);
+  margin-inline: auto;
+}
+
+.setu-how .setu-section {
+  padding-block: clamp(76px, 8vw, 120px);
+  border-top: 1px solid var(--line);
+}
+
+.setu-how .section-heading {
+  margin-bottom: 42px;
+}
+
+.setu-how .eyebrow,
+.setu-how .small-label {
+  font-family: var(--font-dm-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.setu-how .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.setu-how .eyebrow > span:first-child:not(.brand-mark) {
+  color: var(--green);
+}
+
+.setu-how .small-label {
+  display: block;
+  font-size: 10px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+.setu-how h1,
+.setu-how h2 {
+  font-weight: 650;
+  letter-spacing: -0.065em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.setu-how h2 {
+  max-width: 990px;
+  margin-top: 22px;
+  font-size: clamp(36px, 4.6vw, 64px);
+}
+
+.setu-how h3,
+.setu-how h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+}
+
+.setu-how .setu-icon {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.setu-how .body-copy,
+.setu-how .section-description {
+  max-width: 610px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.setu-how .text-link,
+.setu-how .text-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 44px;
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.setu-how .text-link .setu-icon,
+.setu-how .primary-button .setu-icon {
+  transition: transform 220ms ease;
+}
+
+.setu-how .text-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.setu-how .text-button .setu-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.setu-how .disclosure {
+  margin-top: 20px;
+  max-width: 870px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+/* 01 — HERO */
+
+.setu-how .setu-hero {
+  padding-block: 38px 50px;
+}
+
+.setu-how .hero-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: clamp(50px, 7vw, 96px);
+}
+
+.setu-how .brand-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+}
+
+.setu-how .hero-aside {
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.setu-how h1 {
+  font-size: clamp(58px, 8.7vw, 126px);
+  line-height: 0.94;
+  letter-spacing: -0.075em;
+}
+
+.setu-how h1 span {
+  color: var(--green);
+}
+
+.setu-how h1 .hero-period {
+  color: var(--ink);
+}
+
+.setu-how .hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 34px;
+}
+
+.setu-how .hero-description {
+  max-width: 610px;
+  color: var(--muted);
+  font-size: clamp(17px, 1.6vw, 21px);
+  line-height: 1.65;
+}
+
+.setu-how .hero-bottom .text-link {
+  flex-shrink: 0;
+}
+
+.setu-how .setu-flow {
+  display: grid;
+  grid-template-columns: repeat(var(--flow-count), minmax(0, 1fr));
+  list-style: none;
+}
+
+.setu-how .setu-flow li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 23px 24px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.setu-how .setu-flow li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -7px;
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 400;
+  z-index: 1;
+}
+
+.setu-how .flow-marker {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.setu-how .hero-flow {
+  margin-top: 56px;
+  border-block: 1px solid var(--line);
+  text-transform: uppercase;
+}
+
+.setu-how .hero-flow li:first-child {
+  padding-left: 0;
+}
+
+.setu-how .hero-flow li:last-child {
+  color: var(--green);
+}
+
+.setu-how .hero-footnote {
+  margin-top: 17px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 02 — THE GAP */
+
+.setu-how .problem-section {
+  background: var(--white);
+}
+
+.setu-how .problem-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: clamp(48px, 9vw, 140px);
+}
+
+.setu-how .broken-path {
+  max-width: 450px;
+}
+
+.setu-how .problem-node {
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.setu-how .problem-node strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 21px;
+}
+
+.setu-how .compact-node {
+  font-size: 15px;
+}
+
+.setu-how .vertical-connector {
+  display: block;
+  width: 1px;
+  height: 26px;
+  margin-left: 34px;
+  background: var(--line);
+}
+
+.setu-how .vertical-connector.dashed {
+  width: 0;
+  height: 36px;
+  border-left: 1px dashed #a6aea4;
+  background: none;
+}
+
+.setu-how .missing-node {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 22px;
+  border: 1px dashed #a6aea4;
+}
+
+.setu-how .missing-node > span {
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 1;
+  color: #7a6753;
+}
+
+.setu-how .missing-node strong {
+  font-size: 18px;
+}
+
+.setu-how .missing-node p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .bridge-statement > p:not(.body-copy) {
+  margin-top: 16px;
+  font-size: clamp(25px, 2.8vw, 36px);
+  line-height: 1.3;
+  letter-spacing: -0.045em;
+}
+
+.setu-how .bridge-statement > p span {
+  color: var(--green);
+}
+
+.setu-how .bridge-visual {
+  display: flex;
+  align-items: center;
+  margin-block: 30px;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+}
+
+.setu-how .bridge-visual i {
+  flex: 1;
+  height: 1px;
+  margin-inline: 14px;
+  background: var(--green);
+}
+
+.setu-how .bridge-visual b {
+  padding: 12px 16px;
+  background: var(--lime);
+  font-family: inherit;
+  font-size: 17px;
+}
+
+.setu-how .bridge-statement .body-copy {
+  font-size: 15px;
+}
+
+/* 03 — INTERACTIVE JOURNEY */
+
+.setu-how .section-subline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.setu-how .section-subline p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .journey {
+  --journey-progress: 0;
+  position: relative;
+  padding-top: 16px;
+}
+
+.setu-how .journey-rail {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.setu-how .journey-rail > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--green);
+  transform: scaleX(var(--journey-progress));
+  transform-origin: left;
+}
+
+.setu-how .journey-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  list-style: none;
+}
+
+.setu-how .journey-grid li {
+  min-width: 0;
+}
+
+.setu-how .journey-step {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  padding: 20px 17px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 220ms ease,
+    border-color 220ms ease,
+    transform 220ms ease;
+}
+
+.setu-how .journey-step.is-selected {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+
+.setu-how .stage-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.setu-how .stage-number {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.065em;
+}
+
+.setu-how .stage-top .setu-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--green);
+}
+
+.setu-how .stage-title {
+  margin-top: 27px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.setu-how .stage-description {
+  display: block;
+  padding-block: 12px 24px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.setu-how .stage-preview {
+  display: block;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.setu-how .stage-preview .small-label {
+  font-size: 8px;
+  letter-spacing: 0.04em;
+}
+
+.setu-how .stage-preview > span:last-child {
+  display: block;
+  margin-top: 6px;
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.setu-how .journey-detail {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 54px;
+  margin-top: 16px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.setu-how .journey-detail h3 {
+  max-width: 460px;
+  margin-top: 14px;
+  font-size: 22px;
+  line-height: 1.4;
+}
+
+.setu-how .journey-detail-data dl > div {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 18px;
+  padding-block: 9px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.setu-how .journey-detail-data dt {
+  font-weight: 650;
+}
+
+.setu-how .journey-detail-data dd {
+  color: var(--muted);
+}
+
+.setu-how .stage-output {
+  display: grid;
+  gap: 5px;
+  margin-top: 19px;
+  color: var(--green);
+  font-size: 13px;
+}
+
+.setu-how.motion-enabled .journey-detail-data {
+  animation: setu-enter 250ms ease both;
+}
+
+/* 04 — AI WORKBENCH */
+
+.setu-how .ai-section {
+  background: #f0f3ed;
+}
+
+.setu-how .demo-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+
+.setu-how .demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid currentColor;
+  color: var(--green);
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.setu-how .demo-badge::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border: 1px solid currentColor;
+}
+
+.setu-how .ai-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) 54px minmax(0, 1.1fr);
+  align-items: stretch;
+}
+
+.setu-how .raw-report,
+.setu-how .structured-report {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--white);
+  box-shadow: 0 8px 30px rgb(23 39 31 / 3%);
+}
+
+.setu-how .raw-report {
+  display: flex;
+  flex-direction: column;
+}
+
+.setu-how .workbench-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 58px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.setu-how .neutral-status,
+.setu-how .review-status {
+  font-size: 10px;
+}
+
+.setu-how .neutral-status {
+  color: var(--muted);
+}
+
+.setu-how .review-status {
+  padding: 3px 7px;
+  color: #765422;
+  background: #faf0d9;
+}
+
+.setu-how .report-body {
+  padding: 32px;
+}
+
+.setu-how .report-body > .setu-icon {
+  color: var(--muted);
+}
+
+.setu-how .report-body blockquote {
+  margin-top: 26px;
+  font-size: clamp(20px, 2vw, 27px);
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+}
+
+.setu-how .report-body p {
+  max-width: 290px;
+  margin-top: 25px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .input-note {
+  display: grid;
+  gap: 7px;
+  margin-top: auto;
+  padding: 22px 32px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.setu-how .ai-transfer {
+  display: grid;
+  place-items: center;
+  color: var(--green);
+}
+
+.setu-how .structured-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  padding: 28px;
+}
+
+.setu-how .structured-fields > div:last-child {
+  grid-column: 1 / -1;
+}
+
+.setu-how .structured-fields dd {
+  margin-top: 6px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.setu-how .priority-label {
+  display: inline-block;
+  padding: 2px 9px;
+  color: #8a442c;
+  background: #f7eee7;
+  font-size: 12px;
+}
+
+.setu-how .engineering-brief {
+  margin: 0 14px 14px;
+  padding: 25px;
+  border-left: 3px solid var(--green);
+  background: var(--green-soft);
+}
+
+.setu-how .engineering-brief h3 {
+  margin-top: 13px;
+  font-size: 23px;
+  line-height: 1.35;
+}
+
+.setu-how .brief-caption {
+  display: block;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.setu-how.motion-enabled [data-entered="true"] .sequence-item {
+  animation: setu-enter 400ms ease both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* 05 — DEMONSTRATION CASE */
+
+.setu-how .case-section {
+  --muted: #b3c4b7;
+  --line: #3b5144;
+  --green: #d8f391;
+
+  color: #f4f7ef;
+  background: var(--dark);
+}
+
+.setu-how .case-section .section-heading {
+  margin-bottom: 50px;
+}
+
+.setu-how .case-intro {
+  display: grid;
+  grid-template-columns: 1fr 0.85fr;
+  align-items: center;
+  gap: 64px;
+}
+
+.setu-how .case-intro h3 {
+  max-width: 510px;
+  margin-top: 22px;
+  font-size: clamp(25px, 3vw, 39px);
+}
+
+.setu-how .case-intro p {
+  max-width: 480px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.setu-how .water-schematic {
+  display: flex;
+  align-items: flex-start;
+  padding: 30px 18px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(to right, rgb(182 220 226 / 4%) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(182 220 226 / 4%) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.setu-how .water-schematic > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  text-align: center;
+}
+
+.setu-how .schematic-icon {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid #607e79;
+  border-radius: 50%;
+  color: var(--water);
+  background: var(--dark);
+}
+
+.setu-how .water-schematic > div > span:last-child {
+  max-width: 90px;
+  color: #c5d7d2;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+}
+
+.setu-how .water-schematic i {
+  width: 24px;
+  margin-top: 29px;
+  border-top: 1px dashed #72948d;
+}
+
+.setu-how .case-trail {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 64px;
+  list-style: none;
+}
+
+.setu-how .case-trail li {
+  position: relative;
+  min-width: 0;
+  padding-right: 20px;
+}
+
+.setu-how .case-trail li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 35px;
+  right: 0;
+  height: 1px;
+  background: #607950;
+}
+
+.setu-how .case-dot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #8ea66f;
+  border-radius: 50%;
+  color: var(--lime);
+  background: var(--dark);
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+}
+
+.setu-how .case-trail h4 {
+  margin-top: 21px;
+  font-size: 12px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.setu-how .case-trail p {
+  max-width: 165px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.setu-how .case-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 44px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.setu-how .case-footer p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .case-footer strong {
+  color: #ecf5e5;
+  font-weight: 500;
+}
+
+.setu-how .case-footer > span {
+  max-width: 250px;
+  color: var(--muted);
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+}
+
+/* 06 — CAPABILITY MATCHING */
+
+.setu-how .matching-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px minmax(0, 1fr);
+  align-items: center;
+  margin-top: 28px;
+}
+
+.setu-how .challenge-profile {
+  padding: 20px 0;
+}
+
+.setu-how .challenge-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.setu-how .challenge-title .setu-icon {
+  color: var(--green);
+}
+
+.setu-how .challenge-title h3 {
+  font-size: 27px;
+}
+
+.setu-how .challenge-profile > p {
+  max-width: 340px;
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.setu-how .capability-requirements {
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid var(--line);
+}
+
+.setu-how .capability-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  list-style: none;
+}
+
+.setu-how .capability-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  font-size: 13px;
+}
+
+.setu-how .capability-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  background: var(--green);
+}
+
+.setu-how .match-connector {
+  display: flex;
+  align-items: center;
+  color: var(--green);
+}
+
+.setu-how .match-connector span {
+  flex: 1;
+  height: 1px;
+  background: var(--green);
+}
+
+.setu-how .match-connector .setu-icon {
+  margin-inline: 8px;
+}
+
+.setu-how .match-profile {
+  padding: 30px;
+  border: 1px solid var(--green);
+  border-radius: 4px;
+  background: var(--white);
+  box-shadow: 0 12px 38px rgb(23 39 31 / 4%);
+}
+
+.setu-how .match-profile header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.setu-how .match-profile header .setu-icon {
+  color: var(--green);
+}
+
+.setu-how .match-profile h3 {
+  max-width: 350px;
+  margin-top: 23px;
+  font-size: 25px;
+}
+
+.setu-how .match-status {
+  width: fit-content;
+  margin-top: 18px;
+  padding: 7px 10px;
+  color: var(--green);
+  background: var(--green-soft);
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.setu-how .match-reasons {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.setu-how .match-reasons dt {
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.setu-how .match-reasons dd {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.setu-how .match-note {
+  margin-top: 23px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* 07 — ECOSYSTEM */
+
+.setu-how .ecosystem-section {
+  background: var(--white);
+}
+
+.setu-how .ecosystem-map {
+  max-width: 820px;
+  margin: 48px auto 0;
+  text-align: center;
+}
+
+.setu-how .ecosystem-community {
+  max-width: 390px;
+  margin-inline: auto;
+}
+
+.setu-how .ecosystem-community h3 {
+  margin-top: 10px;
+  font-size: 28px;
+}
+
+.setu-how .ecosystem-community p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .eco-trunk {
+  width: 1px;
+  height: 30px;
+  margin-inline: auto;
+  background: var(--green);
+}
+
+.setu-how .ecosystem-hub {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  max-width: 370px;
+  margin-inline: auto;
+  padding: 21px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.setu-how .ecosystem-hub strong {
+  font-size: 36px;
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+}
+
+.setu-how .ecosystem-hub span {
+  max-width: 240px;
+  color: #c7d5c8;
+  font-size: 11px;
+}
+
+.setu-how .eco-branches {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.setu-how .eco-branches::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 25%;
+  right: 25%;
+  height: 1px;
+  background: var(--green);
+}
+
+.setu-how .eco-branches article {
+  position: relative;
+  padding: 43px 28px 24px;
+}
+
+.setu-how .eco-branches article::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 25px;
+  background: var(--green);
+}
+
+.setu-how .eco-branches h3 {
+  margin-top: 10px;
+  font-size: 27px;
+}
+
+.setu-how .eco-branches p {
+  max-width: 270px;
+  margin: 12px auto 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.setu-how .eco-merge {
+  width: 50%;
+  height: 25px;
+  margin-inline: auto;
+  border: 1px solid var(--green);
+  border-top: 0;
+}
+
+.setu-how .ecosystem-pilot,
+.setu-how .ecosystem-outcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  max-width: 430px;
+  margin-inline: auto;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+.setu-how .ecosystem-pilot strong,
+.setu-how .ecosystem-outcome strong {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.setu-how .ecosystem-pilot span,
+.setu-how .ecosystem-outcome span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.setu-how .ecosystem-outcome {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+
+.setu-how .ecosystem-outcome > .setu-icon {
+  color: var(--green);
+}
+
+/* 08 — VERIFICATION */
+
+.setu-how .not-equal {
+  color: var(--green);
+}
+
+.setu-how .verification-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  margin-bottom: 34px;
+}
+
+.setu-how .evidence-caption {
+  color: var(--green);
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  text-align: right;
+}
+
+.setu-how .evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+}
+
+.setu-how .evidence-grid li {
+  padding: 24px 19px;
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.setu-how .evidence-grid .setu-icon {
+  color: var(--green);
+}
+
+.setu-how .evidence-grid h3 {
+  margin-top: 24px;
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.setu-how .evidence-grid p {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.setu-how .vso-panel {
+  position: relative;
+  margin-top: 30px;
+  padding: 34px;
+  border: 1px solid var(--green);
+  background: var(--green-soft);
+}
+
+.setu-how .vso-panel::before {
+  content: "";
+  position: absolute;
+  top: -31px;
+  left: 50%;
+  width: 1px;
+  height: 30px;
+  background: var(--green);
+}
+
+.setu-how .vso-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.setu-how .vso-heading h3 {
+  margin-top: 12px;
+  font-size: clamp(23px, 2.7vw, 34px);
+}
+
+.setu-how .vso-monogram {
+  color: #4a7051;
+  font-family: ui-monospace, monospace;
+  font-size: 28px;
+  letter-spacing: -0.05em;
+}
+
+.setu-how .evidence-flow {
+  margin-top: 30px;
+  border-block: 1px solid #cbd8c5;
+}
+
+.setu-how .evidence-flow li {
+  padding: 20px 18px;
+  font-size: 11px;
+}
+
+.setu-how .evidence-flow li:first-child {
+  padding-left: 0;
+}
+
+.setu-how .evidence-flow .flow-marker {
+  display: none;
+}
+
+.setu-how .vso-panel > p {
+  margin-top: 19px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* 09 — COMPARISON */
+
+.setu-how .comparison-section {
+  background: var(--white);
+}
+
+.setu-how .comparison-table {
+  border-top: 1px solid var(--line);
+}
+
+.setu-how .comparison-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding-block: 30px;
+  border-bottom: 1px solid var(--line);
+}
+
+.setu-how .comparison-row h3 {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.setu-how .comparison-row ol {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px 26px;
+  list-style: none;
+}
+
+.setu-how .comparison-row li {
+  position: relative;
+  font-size: 12px;
+}
+
+.setu-how .comparison-row li:not(:last-child)::after {
+  content: "→";
+  position: absolute;
+  right: -20px;
+  color: var(--muted);
+}
+
+.setu-how .traditional-row {
+  color: var(--muted);
+}
+
+.setu-how .traditional-row li:last-child {
+  padding: 5px 10px;
+  border: 1px dashed #aeb5ac;
+}
+
+.setu-how .setu-row {
+  color: var(--green);
+}
+
+.setu-how .setu-row li:last-child {
+  padding: 5px 10px;
+  background: var(--green-soft);
+}
+
+.setu-how .comparison-closing {
+  margin-top: 32px;
+  font-size: clamp(21px, 2.3vw, 29px);
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+}
+
+.setu-how .comparison-closing span {
+  color: var(--green);
+}
+
+/* 10 — CTA */
+
+.setu-how .setu-cta {
+  padding-block: clamp(72px, 8vw, 112px);
+  color: var(--paper);
+  background: var(--dark);
+}
+
+.setu-how .setu-cta .eyebrow {
+  color: #b4c5b8;
+}
+
+.setu-how .setu-cta .eyebrow > span:first-child {
+  color: var(--lime);
+}
+
+.setu-how .setu-cta h2 {
+  max-width: 1150px;
+  margin-top: 33px;
+  font-size: clamp(41px, 6.5vw, 91px);
+  line-height: 1.02;
+}
+
+.setu-how .setu-cta h2 span {
+  color: var(--lime);
+}
+
+.setu-how .cta-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  margin-top: 48px;
+  padding-top: 29px;
+  border-top: 1px solid #3b5144;
+}
+
+.setu-how .cta-bottom p {
+  color: #c3d0c6;
+  font-size: 18px;
+}
+
+.setu-how .primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  min-height: 58px;
+  padding: 17px 24px;
+  color: var(--ink);
+  background: var(--lime);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  transition: background 200ms ease;
+}
+
+@keyframes setu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover is supplementary, never necessary to access content. */
+
+@media (hover: hover) {
+  .setu-how .journey-step:hover {
+    transform: translateY(-3px);
+    border-color: var(--green);
+    background: var(--green-soft);
+  }
+
+  .setu-how .text-link:hover .setu-icon,
+  .setu-how .primary-button:hover .setu-icon {
+    transform: translateX(4px);
+  }
+
+  .setu-how .text-button:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .setu-how .primary-button:hover {
+    background: #e6ffab;
+  }
+}
+
+/* TABLET: recompose rather than compress. */
+
+@media (max-width: 1050px) {
+  .setu-how .setu-container {
+    width: min(100% - 64px, 1240px);
+  }
+
+  .setu-how .hero-aside {
+    display: none;
+  }
+
+  .setu-how .problem-layout {
+    gap: 44px;
+  }
+
+  .setu-how .section-subline .small-label {
+    display: none;
+  }
+
+  .setu-how .journey-grid {
+    gap: 7px;
+  }
+
+  .setu-how .journey-step {
+    padding: 17px 12px;
+    min-height: 325px;
+  }
+
+  .setu-how .stage-title {
+    font-size: 13px;
+  }
+
+  .setu-how .stage-number {
+    font-size: 34px;
+  }
+
+  .setu-how .stage-top .setu-icon {
+    width: 17px;
+    height: 17px;
+  }
+
+  .setu-how .journey-detail {
+    gap: 30px;
+  }
+
+  .setu-how .case-intro {
+    gap: 32px;
+  }
+
+  .setu-how .case-trail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 34px 0;
+  }
+
+  .setu-how .case-trail li:nth-child(3)::before {
+    display: none;
+  }
+
+  .setu-how .matching-layout {
+    grid-template-columns: minmax(0, 1fr) 64px minmax(0, 1fr);
+  }
+
+  .setu-how .match-profile {
+    padding: 24px;
+  }
+
+  .setu-how .evidence-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .setu-how .evidence-grid li {
+    grid-column: span 2;
+  }
+
+  .setu-how .evidence-grid li:nth-last-child(-n + 2) {
+    grid-column: span 3;
+  }
+
+  .setu-how .evidence-flow li {
+    padding-inline: 11px;
+    font-size: 10px;
+  }
+
+  .setu-how .comparison-row {
+    grid-template-columns: 120px minmax(0, 1fr);
+  }
+}
+
+/* MOBILE / SMALL TABLET: intentional vertical flows. */
+
+@media (max-width: 760px) {
+  .setu-how .setu-container {
+    width: calc(100% - 40px);
+  }
+
+  .setu-how .setu-section {
+    padding-block: 64px;
+  }
+
+  .setu-how .section-heading {
+    margin-bottom: 30px;
+  }
+
+  .setu-how h2 {
+    margin-top: 18px;
+    font-size: clamp(34px, 7.3vw, 52px);
+  }
+
+  .setu-how .eyebrow {
+    gap: 11px;
+    font-size: 9px;
+  }
+
+  .setu-how .setu-hero {
+    padding-block: 26px 34px;
+  }
+
+  .setu-how .hero-topline {
+    margin-bottom: 50px;
+  }
+
+  .setu-how h1 {
+    font-size: clamp(46px, 10.3vw, 78px);
+  }
+
+  .setu-how .hero-bottom {
+    display: block;
+    margin-top: 26px;
+  }
+
+  .setu-how .hero-description {
+    max-width: 540px;
+    font-size: 17px;
+  }
+
+  .setu-how .hero-bottom .text-link {
+    margin-top: 16px;
+  }
+
+  .setu-how .setu-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .setu-how .hero-flow {
+    margin-top: 29px;
+    padding-block: 8px;
+  }
+
+  .setu-how .setu-flow li,
+  .setu-how .setu-flow li:first-child {
+    padding: 14px 0 14px 5px;
+  }
+
+  .setu-how .setu-flow li:not(:last-child)::after {
+    content: "";
+    top: calc(50% + 11px);
+    bottom: calc(-50% + 11px);
+    left: 12px;
+    right: auto;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .setu-how .flow-marker {
+    position: relative;
+    z-index: 2;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  .setu-how .hero-footnote {
+    max-width: 270px;
+    font-size: 11px;
+  }
+
+  .setu-how .problem-layout {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .setu-how .broken-path {
+    max-width: none;
+  }
+
+  .setu-how .bridge-statement > p:not(.body-copy) {
+    font-size: 29px;
+  }
+
+  .setu-how .bridge-visual {
+    max-width: 470px;
+  }
+
+  .setu-how .journey {
+    padding-top: 0;
+    padding-left: 17px;
+  }
+
+  .setu-how .journey-rail {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+
+  .setu-how .journey-rail > span {
+    transform: scaleY(var(--journey-progress));
+    transform-origin: top;
+  }
+
+  .setu-how .journey-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .setu-how .journey-step {
+    position: relative;
+    min-height: 0;
+    padding: 20px;
+  }
+
+  .setu-how .journey-step::before {
+    content: "";
+    position: absolute;
+    top: 34px;
+    left: -18px;
+    width: 17px;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .setu-how .stage-number {
+    font-size: 37px;
+  }
+
+  .setu-how .stage-title {
+    margin-top: 16px;
+    font-size: 17px;
+  }
+
+  .setu-how .stage-description {
+    max-width: 460px;
+    padding-block: 8px 18px;
+    font-size: 13px;
+  }
+
+  .setu-how .stage-preview {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px 16px;
+  }
+
+  .setu-how .stage-preview > span:last-child {
+    margin-top: 0;
+    font-size: 11px;
+  }
+
+  .setu-how .journey-detail {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 22px;
+    padding: 24px;
+  }
+
+  .setu-how .journey-detail h3 {
+    font-size: 20px;
+  }
+
+  .setu-how .journey-detail-data dl > div {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .setu-how .demo-toolbar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 7px 18px;
+  }
+
+  .setu-how .text-button {
+    font-size: 11px;
+  }
+
+  .setu-how .ai-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .setu-how .ai-transfer {
+    height: 48px;
+  }
+
+  .setu-how .ai-transfer .setu-icon {
+    transform: rotate(90deg);
+  }
+
+  .setu-how .workbench-bar {
+    padding: 15px 20px;
+  }
+
+  .setu-how .report-body {
+    padding: 26px;
+  }
+
+  .setu-how .report-body blockquote {
+    font-size: 24px;
+  }
+
+  .setu-how .input-note {
+    padding: 20px 26px;
+  }
+
+  .setu-how .structured-fields {
+    gap: 22px 16px;
+    padding: 24px;
+  }
+
+  .setu-how .engineering-brief {
+    padding: 22px;
+  }
+
+  .setu-how .engineering-brief h3 {
+    font-size: 22px;
+  }
+
+  .setu-how .case-intro {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .setu-how .case-intro h3 {
+    max-width: 430px;
+    font-size: 30px;
+  }
+
+  .setu-how .water-schematic {
+    max-width: 500px;
+  }
+
+  .setu-how .case-trail {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 36px;
+  }
+
+  .setu-how .case-trail li {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 5px 20px;
+    padding: 0 0 30px;
+  }
+
+  .setu-how .case-trail li:last-child {
+    padding-bottom: 0;
+  }
+
+  .setu-how .case-trail li:not(:last-child)::before,
+  .setu-how .case-trail li:nth-child(3)::before {
+    display: block;
+    top: 35px;
+    bottom: 0;
+    left: 17px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+
+  .setu-how .case-dot {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .setu-how .case-trail h4 {
+    grid-column: 2;
+    margin-top: 3px;
+    font-size: 13px;
+  }
+
+  .setu-how .case-trail p {
+    grid-column: 2;
+    max-width: none;
+    margin-top: 0;
+    font-size: 13px;
+  }
+
+  .setu-how .case-footer {
+    display: grid;
+    gap: 15px;
+    margin-top: 30px;
+  }
+
+  .setu-how .case-footer > span {
+    max-width: none;
+  }
+
+  .setu-how .matching-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .setu-how .challenge-profile {
+    padding-top: 0;
+  }
+
+  .setu-how .challenge-title h3 {
+    font-size: 25px;
+  }
+
+  .setu-how .match-connector {
+    flex-direction: column;
+    height: 70px;
+    margin-bottom: 18px;
+  }
+
+  .setu-how .match-connector span {
+    width: 1px;
+    height: auto;
+  }
+
+  .setu-how .match-connector .setu-icon {
+    margin: 6px 0;
+    transform: rotate(90deg);
+  }
+
+  .setu-how .match-profile {
+    padding: 25px;
+  }
+
+  .setu-how .section-description {
+    font-size: 16px;
+  }
+
+  .setu-how .ecosystem-map {
+    margin-top: 36px;
+  }
+
+  .setu-how .ecosystem-community h3 {
+    font-size: 25px;
+  }
+
+  .setu-how .ecosystem-hub {
+    max-width: 285px;
+  }
+
+  .setu-how .eco-branches article {
+    padding-inline: 10px;
+  }
+
+  .setu-how .eco-branches .small-label {
+    font-size: 9px;
+  }
+
+  .setu-how .eco-branches h3 {
+    font-size: clamp(18px, 4.4vw, 25px);
+  }
+
+  .setu-how .eco-branches p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .setu-how .verification-intro {
+    display: grid;
+    gap: 18px;
+  }
+
+  .setu-how .evidence-caption {
+    text-align: left;
+    font-size: 9px;
+  }
+
+  .setu-how .evidence-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .setu-how .evidence-grid li,
+  .setu-how .evidence-grid li:nth-last-child(-n + 2) {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    grid-column: auto;
+    gap: 5px 18px;
+    padding: 21px;
+  }
+
+  .setu-how .evidence-grid .setu-icon {
+    grid-row: 1 / 3;
+  }
+
+  .setu-how .evidence-grid h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .setu-how .evidence-grid p {
+    grid-column: 2;
+    margin: 0;
+  }
+
+  .setu-how .vso-panel {
+    padding: 26px 22px;
+  }
+
+  .setu-how .vso-monogram {
+    display: none;
+  }
+
+  .setu-how .vso-heading h3 {
+    font-size: 27px;
+  }
+
+  .setu-how .evidence-flow {
+    padding-block: 10px;
+  }
+
+  .setu-how .evidence-flow .flow-marker {
+    display: block;
+  }
+
+  .setu-how .evidence-flow li {
+    gap: 15px;
+    font-size: 12px;
+  }
+
+  .setu-how .evidence-flow li:not(:last-child)::after {
+    background: #a9bea0;
+  }
+
+  .setu-how .comparison-row {
+    grid-template-columns: 85px minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+    padding-block: 25px;
+  }
+
+  .setu-how .comparison-row h3 {
+    padding-top: 4px;
+    font-size: 9px;
+  }
+
+  .setu-how .comparison-row ol {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
+
+  .setu-how .comparison-row li:not(:last-child)::after {
+    content: "↓";
+    top: calc(100% + 1px);
+    left: 0;
+    right: auto;
+    font-size: 12px;
+  }
+
+  .setu-how .comparison-closing {
+    font-size: 24px;
+  }
+
+  .setu-how .setu-cta {
+    padding-block: 64px;
+  }
+
+  .setu-how .setu-cta h2 {
+    font-size: clamp(37px, 8vw, 60px);
+    line-height: 1.08;
+  }
+
+  .setu-how .cta-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 34px;
+  }
+
+  .setu-how .cta-bottom p {
+    font-size: 17px;
+  }
+
+  .setu-how .primary-button {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
+/* Motion preference also applies before React hydrates. */
+
+@media (prefers-reduced-motion: reduce) {
+  .setu-how *,
+  .setu-how *::before,
+  .setu-how *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .setu-how .journey-step:hover,
+  .setu-how .text-link:hover .setu-icon,
+  .setu-how .primary-button:hover .setu-icon {
+    transform: none;
+  }
+}
+
+.setu-how.motion-reduced *,
+.setu-how.motion-reduced *::before,
+.setu-how.motion-reduced *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media print {
+  .setu-how {
+    color: #000;
+    background: #fff;
+  }
+
+  .setu-how .setu-section,
+  .setu-how .setu-hero,
+  .setu-how .setu-cta {
+    padding-block: 28px;
+  }
+
+  .setu-how .text-button,
+  .setu-how .hero-bottom .text-link {
+    display: none;
+  }
+
+  .setu-how .sequence-item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

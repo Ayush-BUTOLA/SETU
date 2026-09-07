@@ -1,217 +1,935 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import React, { createContext, useContext, useId, useState } from 'react';
 import Link from 'next/link';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import StaggeredMenu from '@/components/StaggeredMenu';
 import SiteFooter from '@/components/SiteFooter';
-import { HOW_IT_WORKS_STEPS, STAGGERED_MENU_ITEMS, STAGGERED_SOCIAL_ITEMS } from '@/lib/setu-data';
-import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import FadeContent from '@/components/FadeContent';
+import ClickSpark from '@/components/ClickSpark';
+import { STAGGERED_MENU_ITEMS, STAGGERED_SOCIAL_ITEMS } from '@/lib/setu-data';
+import { ArrowRight } from 'lucide-react';
 import { useAuthModal } from '@/context/AuthModalContext';
-import type Lenis from 'lenis';
+import {
+  useEnterOnce,
+  useJourneyProgress,
+  usePageLenis,
+  useReducedMotion,
+} from './usePageMotion';
+import './how-it-works.css';
 
-// ─── Step data with Omega-style framing ──────────────────────────────────────
-const STEPS = [
+const MotionContext = createContext<boolean>(false);
+
+interface StageItem {
+  number: string;
+  title: string;
+  icon: string;
+  description: string;
+  previewLabel: string;
+  preview: string;
+  detail: string;
+  fields: [string, string][];
+  output: string;
+}
+
+const STAGES: StageItem[] = [
   {
-    num: '01',
-    verb: 'REPORT',
-    headline: 'A real problem enters the system.',
-    body: 'Citizens, NGOs, and panchayats submit local challenges with location, photo evidence, and context. Problems don\'t disappear into a form — they become structured cases ready for action.',
-    tag: 'Citizen Submission',
-    image: HOW_IT_WORKS_STEPS[0].image,
-    imageAlt: HOW_IT_WORKS_STEPS[0].imageAlt,
+    number: '01',
+    title: 'Report',
+    icon: 'pin',
+    description: 'Start with the problem as your community experiences it.',
+    previewLabel: 'COMMUNITY INPUT',
+    preview: 'Description · GPS · Evidence',
+    detail: 'Describe what is happening, where it happens, and who it affects.',
+    fields: [
+      ['Capture', 'Description and relevant local context'],
+      ['Locate', 'Location or GPS coordinates'],
+      ['Support', 'Photos and other available evidence'],
+    ],
+    output: 'A grounded problem report',
   },
   {
-    num: '02',
-    verb: 'STRUCTURE',
-    headline: 'AI turns a complaint into an engineering brief.',
-    body: 'SETU\'s AI layer analyses each submission — clarifying scope, extracting constraints, and producing a challenge brief that technical teams can immediately act on. Human reviewers validate every brief.',
-    tag: 'AI-Assisted Structuring',
-    image: HOW_IT_WORKS_STEPS[1].image,
-    imageAlt: HOW_IT_WORKS_STEPS[1].imageAlt,
+    number: '02',
+    title: 'Structure',
+    icon: 'structure',
+    description: 'Turn a messy report into an actionable engineering brief.',
+    previewLabel: 'AI-ASSISTED OUTPUT',
+    preview: 'Domain · Constraints · Capabilities',
+    detail: 'AI helps organise the report into a challenge that technical teams can assess.',
+    fields: [
+      ['Understand', 'Domain, location and severity'],
+      ['Define', 'Constraints and required capabilities'],
+      ['Explore', 'Potential solution directions'],
+    ],
+    output: 'An engineering-ready challenge, ready for review',
   },
   {
-    num: '03',
-    verb: 'MATCH',
-    headline: 'The right institution receives the brief.',
-    body: 'Each structured challenge is matched to universities, research labs, or industry teams based on capability, domain, and geography — not who happens to be browsing the platform.',
-    tag: 'Capability Matching',
-    image: HOW_IT_WORKS_STEPS[2].image,
-    imageAlt: HOW_IT_WORKS_STEPS[2].imageAlt,
+    number: '03',
+    title: 'Match',
+    icon: 'match',
+    description: 'Connect the challenge with relevant technical capabilities.',
+    previewLabel: 'CAPABILITY ALIGNMENT',
+    preview: 'Expertise · Resources · Geography',
+    detail: 'Identify universities, faculty, student teams, research groups or industry capabilities suited to the challenge.',
+    fields: [
+      ['Expertise', 'Domain knowledge and technical capabilities'],
+      ['Feasibility', 'Resources and geographic relevance'],
+      ['Fit', 'Research or project relevance'],
+    ],
+    output: 'Relevant teams to evaluate',
   },
   {
-    num: '04',
-    verb: 'BUILD',
-    headline: 'Student teams build in the field, not the lab.',
-    body: 'Faculty-led student teams develop and iterate on solutions directly with the community. The pilot lives where the problem lives — tested under real conditions, not in simulation.',
-    tag: 'Engineering Sprint',
-    image: HOW_IT_WORKS_STEPS[3].image,
-    imageAlt: HOW_IT_WORKS_STEPS[3].imageAlt,
+    number: '04',
+    title: 'Build',
+    icon: 'build',
+    description: 'Move from an idea to a prototype, then into the field.',
+    previewLabel: 'DEVELOPMENT PATH',
+    preview: 'Idea → Prototype → Field pilot',
+    detail: 'University, faculty and student teams develop a solution, with possible support from industry or CSR partners.',
+    fields: [
+      ['Design', 'A solution shaped by local constraints'],
+      ['Prototype', 'A testable engineering implementation'],
+      ['Enable', 'Potential funding, mentorship or deployment support'],
+    ],
+    output: 'A solution ready for field testing',
   },
   {
-    num: '05',
-    verb: 'VERIFY',
-    headline: 'The community confirms what changed.',
-    body: 'Outcomes are reviewed with field evidence and direct confirmation from the people who reported the problem. A challenge is only marked resolved when the community agrees it is.',
-    tag: 'Community Verification',
-    image: HOW_IT_WORKS_STEPS[4].image,
-    imageAlt: HOW_IT_WORKS_STEPS[4].imageAlt,
+    number: '05',
+    title: 'Verify',
+    icon: 'check',
+    description: 'Establish what changed through evidence and community input.',
+    previewLabel: 'EVIDENCE REQUIREMENT',
+    preview: 'Field data + Community confirmation',
+    detail: 'Test the solution where the problem exists. A completed prototype is not, by itself, a verified outcome.',
+    fields: [
+      ['Test', 'Real conditions and location context'],
+      ['Document', 'Photos, observations and measurements'],
+      ['Confirm', 'Community feedback and outcome review'],
+    ],
+    output: 'A Verified Societal Outcome, when supported by evidence',
   },
 ];
 
-// ─── Horizontal scroller panel ────────────────────────────────────────────────
-function HorizontalSteps() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+const DEMO_STEPS: [string, string][] = [
+  ['Community', 'Problem submitted'],
+  ['SETU AI', 'Problem structured'],
+  ['Capability match', 'Relevant university/team identified'],
+  ['University', 'Prototype developed'],
+  ['Field pilot', 'Tested under real conditions'],
+  ['Verification', 'Evidence + community confirmation'],
+];
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+const CAPABILITIES = [
+  'IoT',
+  'Environmental Engineering',
+  'Data Analytics',
+];
 
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
+const EVIDENCE: [string, string, string][] = [
+  ['pin', 'Location / GPS context', 'Connect the test to the place it serves.'],
+  ['camera', 'Field evidence', 'Document the solution in real conditions.'],
+  ['chart', 'Measurements / data', 'Assess change against the problem.'],
+  ['message', 'Community feedback', 'Hear from the people affected.'],
+  ['check', 'Outcome verification', 'Review the evidence before closing the loop.'],
+];
 
-    const ctx = gsap.context(() => {
-      const track = trackRef.current;
-      const container = containerRef.current;
-      if (!track || !container) return;
-
-      // Sync Lenis with ScrollTrigger
-      const lenis = (window as Window & { __lenis?: Lenis }).__lenis;
-      if (lenis) {
-        lenis.on('scroll', ScrollTrigger.update);
-      }
-
-      const panelWidth = track.scrollWidth - window.innerWidth;
-
-      gsap.to(track, {
-        x: () => -panelWidth,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: container,
-          start: 'top top',
-          end: () => `+=${panelWidth}`,
-          scrub: 1.2,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-    });
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
+function Icon({ name, className = '' }: { name: string; className?: string }) {
+  const paths: Record<string, React.ReactNode> = {
+    arrow: <path d="M5 12h14m-6-6 6 6-6 6" />,
+    pin: (
+      <>
+        <path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z" />
+        <circle cx="12" cy="10" r="2.5" />
+      </>
+    ),
+    structure: (
+      <>
+        <path d="M8 5h12M8 12h12M8 19h12" />
+        <path d="M3 5h1M3 12h1M3 19h1" />
+      </>
+    ),
+    match: (
+      <>
+        <rect x="2" y="8" width="6" height="8" rx="1" />
+        <rect x="16" y="2" width="6" height="6" rx="1" />
+        <rect x="16" y="16" width="6" height="6" rx="1" />
+        <path d="M8 12h4M12 5v14M12 5h4M12 19h4" />
+      </>
+    ),
+    build: (
+      <>
+        <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+        <path d="M3 8v9l9 5 9-5V8M12 13v9" />
+      </>
+    ),
+    check: <path d="m5 12 4 4L19 6" />,
+    water: (
+      <path d="M12 2S4 10 4 15a8 8 0 0 0 16 0c0-5-8-13-8-13Z" />
+    ),
+    camera: (
+      <>
+        <path d="M3 7h4l2-3h6l2 3h4v14H3Z" />
+        <circle cx="12" cy="13" r="3" />
+      </>
+    ),
+    chart: (
+      <>
+        <path d="M3 3v18h18M7 16v-4M12 16V7M17 16v-7" />
+      </>
+    ),
+    message: (
+      <>
+        <path d="M3 3h18v14H8l-5 4V3Z" />
+        <path d="M7 8h10M7 12h6" />
+      </>
+    ),
+    replay: (
+      <>
+        <path d="M3 4v6h6M3 10a9 9 0 1 1 1 8" />
+      </>
+    ),
+  };
 
   return (
-    <div ref={containerRef} className="relative h-screen overflow-hidden will-change-transform">
-      <div
-        ref={trackRef}
-        className="absolute top-0 left-0 h-full flex"
-        style={{ width: `${STEPS.length * 100}vw` }}
-      >
-        {STEPS.map((step, i) => (
-          <div
-            key={step.num}
-            className="relative w-screen h-full flex items-center shrink-0"
-          >
-            {/* Panel */}
-            <div className="h-full w-full grid grid-cols-1 lg:grid-cols-2">
-              {/* Left: content */}
-              <div className="flex flex-col justify-center px-10 sm:px-16 lg:px-20 py-20 bg-[#f5f6f1]">
-                {/* Step progress */}
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#267f68] uppercase">
-                    {step.num} / 05
-                  </span>
-                  <span className="flex-1 h-px bg-[#d9ddd5] max-w-[60px]" />
-                  <span className="font-mono text-[10px] tracking-widest text-[#6f7772] uppercase">{step.tag}</span>
-                </div>
-
-                {/* Big verb */}
-                <div
-                  className="text-[clamp(4rem,10vw,9rem)] font-extrabold tracking-[-0.04em] leading-[0.85] text-[#101312] uppercase mb-6"
-                  style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                >
-                  {step.verb}
-                  <span className="text-[#267f68]">.</span>
-                </div>
-
-                {/* Headline */}
-                <h2
-                  className="text-[clamp(1.1rem,2vw,1.6rem)] font-semibold text-[#101312] leading-snug mb-4 max-w-md"
-                  style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                >
-                  {step.headline}
-                </h2>
-
-                {/* Body */}
-                <p className="text-sm sm:text-base text-[#59615c] leading-relaxed max-w-sm">
-                  {step.body}
-                </p>
-
-                {/* Step dots */}
-                <div className="flex gap-2.5 mt-10" aria-label="Step progress">
-                  {STEPS.map((_, j) => (
-                    <div
-                      key={j}
-                      className={`h-[3px] rounded-full transition-all duration-300 ${
-                        j === i
-                          ? 'w-8 bg-[#267f68]'
-                          : j < i
-                          ? 'w-4 bg-[#267f68]/40'
-                          : 'w-4 bg-[#d9ddd5]'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: image */}
-              <div className="relative overflow-hidden bg-[#090b0b]">
-                <Image
-                  src={step.image}
-                  alt={step.imageAlt}
-                  fill
-                  className="object-cover object-center saturate-[0.8] contrast-[1.05] scale-[1.02]"
-                  sizes="50vw"
-                  priority={i === 0}
-                />
-                {/* Overlay with step number */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#090b0b]/60 via-transparent to-transparent" />
-                <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end">
-                  <span
-                    className="text-[clamp(4rem,8vw,7rem)] font-extrabold text-white/10 leading-none"
-                    style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                    aria-hidden="true"
-                  >
-                    {step.num}
-                  </span>
-                  <span className="font-mono text-[11px] text-white/60 uppercase tracking-widest">
-                    ← Scroll →
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <svg
+      className={`setu-icon ${className}`}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {paths[name] || paths.structure}
+    </svg>
   );
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-export default function HowItWorksPage() {
-  const { openAuth } = useAuthModal();
+function Reveal({ children }: { children: React.ReactNode }) {
+  const reducedMotion = useContext(MotionContext);
+
+  if (reducedMotion) return <div>{children}</div>;
 
   return (
-    <div className="min-h-screen bg-[#f5f6f1] text-[#101312]">
-      {/* Navigation */}
+    <FadeContent
+      blur={false}
+      duration={500}
+      easing="ease-out"
+      initialOpacity={0}
+      threshold={0.1}
+    >
+      {children}
+    </FadeContent>
+  );
+}
+
+function Section({
+  id,
+  number,
+  label,
+  title,
+  className = '',
+  children,
+}: {
+  id: string;
+  number: string;
+  label: string;
+  title: React.ReactNode;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      className={`setu-section ${className}`}
+      aria-labelledby={`${id}-title`}
+    >
+      <div className="setu-container">
+        <header className="section-heading">
+          <p className="eyebrow">
+            <span>{number}</span>
+            {label}
+          </p>
+          <h2 id={`${id}-title`}>{title}</h2>
+        </header>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function Flow({ items, className = '', label }: { items: string[]; className?: string; label: string }) {
+  return (
+    <ol
+      className={`setu-flow ${className}`}
+      style={{ '--flow-count': items.length } as React.CSSProperties}
+      aria-label={label}
+    >
+      {items.map((item, index) => (
+        <li key={`${item}-${index}`}>
+          <span className="flow-marker" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function DemoBadge({ children = 'Demonstration case' }: { children?: React.ReactNode }) {
+  return <span className="demo-badge">{children}</span>;
+}
+
+function Hero() {
+  return (
+    <section className="setu-hero" aria-labelledby="setu-hero-title">
+      <div className="setu-container">
+        <div className="hero-topline">
+          <p className="eyebrow">
+            <span className="brand-mark" aria-hidden="true">S</span>
+            SETU / HOW IT WORKS
+          </p>
+          <span className="hero-aside">Community → Engineering → Proof</span>
+        </div>
+
+        <Reveal>
+          <h1 id="setu-hero-title">
+            FROM REPORT
+            <br />
+            TO <span>RESULT</span><span className="hero-period">.</span>
+          </h1>
+        </Reveal>
+
+        <div className="hero-bottom">
+          <p className="hero-description">
+            SETU turns real community problems into engineering-ready
+            challenges — then connects them to the capabilities needed
+            to solve them.
+          </p>
+          <a className="text-link" href="#setu-journey">
+            Explore the process <Icon name="arrow" />
+          </a>
+        </div>
+
+        <Flow
+          className="hero-flow"
+          label="The five stages of SETU"
+          items={STAGES.map((stage) => stage.title)}
+        />
+
+        <p className="hero-footnote">
+          Not just a complaint portal. A pathway to building solutions.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function Problem() {
+  return (
+    <Section
+      id="setu-problem"
+      number="02"
+      label="THE MISSING CONNECTION"
+      title="A COMPLAINT IS NOT A SOLUTION."
+      className="problem-section"
+    >
+      <div className="problem-layout">
+        <div className="broken-path" aria-label="The gap after reporting">
+          <div className="problem-node">
+            <span className="small-label">THE PEOPLE</span>
+            <strong>Community</strong>
+          </div>
+          <span className="vertical-connector" aria-hidden="true" />
+          <div className="problem-node compact-node">Problem reported</div>
+          <span className="vertical-connector dashed" aria-hidden="true" />
+          <div className="missing-node">
+            <span aria-hidden="true">?</span>
+            <div>
+              <strong>Then what?</strong>
+              <p>No clear path to expertise, engineering or deployment.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bridge-statement">
+          <span className="small-label">THIS IS WHERE SETU COMES IN</span>
+          <p>
+            The problem isn’t always a lack of ideas.
+            <br />
+            <span>It’s the missing bridge.</span>
+          </p>
+          <div className="bridge-visual" aria-hidden="true">
+            <span>PEOPLE</span>
+            <i />
+            <b>SETU</b>
+            <i />
+            <span>CAPABILITY</span>
+          </div>
+          <p className="body-copy">
+            SETU creates the missing bridge between the people who experience
+            problems and the people who can engineer solutions.
+          </p>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Journey() {
+  const [selected, setSelected] = useState(0);
+  const reducedMotion = useContext(MotionContext);
+  const progressRef = useJourneyProgress<HTMLDivElement>(reducedMotion);
+  const panelId = useId();
+  const stage = STAGES[selected];
+
+  return (
+    <Section
+      id="setu-journey"
+      number="03"
+      label="THE SETU JOURNEY"
+      title="FIVE STEPS. ONE COMPLETE PATH."
+    >
+      <div className="section-subline">
+        <p>Select a stage to inspect the workflow.</p>
+        <span className="small-label">FROM LOCAL CONTEXT TO FIELD EVIDENCE</span>
+      </div>
+
+      <div className="journey" ref={progressRef}>
+        <div className="journey-rail" aria-hidden="true">
+          <span />
+        </div>
+
+        <ol className="journey-grid" aria-label="Explore SETU stages">
+          {STAGES.map((item, index) => (
+            <li key={item.title}>
+              <button
+                type="button"
+                className={`journey-step ${selected === index ? 'is-selected' : ''}`}
+                aria-pressed={selected === index}
+                aria-controls={panelId}
+                onClick={() => setSelected(index)}
+              >
+                <span className="stage-top">
+                  <span className="stage-number">{item.number}</span>
+                  <Icon name={item.icon} />
+                </span>
+                <strong className="stage-title">{item.title}</strong>
+                <span className="stage-description">{item.description}</span>
+                <span className="stage-preview">
+                  <span className="small-label">{item.previewLabel}</span>
+                  <span>{item.preview}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div
+        id={panelId}
+        className="journey-detail"
+        role="region"
+        aria-label="Selected stage details"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <div className="journey-detail-intro">
+          <span className="small-label">
+            INSIDE STAGE {stage.number} / {stage.title.toUpperCase()}
+          </span>
+          <h3>{stage.detail}</h3>
+        </div>
+
+        <div className="journey-detail-data" key={stage.title}>
+          <dl>
+            {stage.fields.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="stage-output">
+            <span className="small-label">OUTPUT</span>
+            <span>{stage.output}</span>
+          </p>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function AIInAction() {
+  const ref = useEnterOnce<HTMLDivElement>();
+  const [replay, setReplay] = useState(0);
+  const reducedMotion = useContext(MotionContext);
+
+  const fields: [string, string][] = [
+    ['Domain', 'Water & Sanitation'],
+    ['Location', 'Rural Rajasthan'],
+    ['Priority', 'High'],
+    ['Required capabilities', CAPABILITIES.join(' · ')],
+  ];
+
+  return (
+    <Section
+      id="setu-ai"
+      number="04"
+      label="AI IN ACTION"
+      title="FROM COMPLAINT TO ENGINEERING BRIEF."
+      className="ai-section"
+    >
+      <div className="demo-toolbar">
+        <DemoBadge />
+        {!reducedMotion && (
+          <button
+            type="button"
+            className="text-button"
+            onClick={() => setReplay((value) => value + 1)}
+          >
+            <Icon name="replay" />
+            Replay transformation
+          </button>
+        )}
+      </div>
+
+      <div className="ai-workbench" ref={ref}>
+        <article className="raw-report">
+          <header className="workbench-bar">
+            <span className="small-label">01 / BEFORE</span>
+            <span className="neutral-status">Community report</span>
+          </header>
+
+          <div className="report-body">
+            <Icon name="message" />
+            <blockquote>
+              “The water in our village doesn't seem safe. We don't know
+              when it becomes unsafe and testing is expensive.”
+            </blockquote>
+            <p>A real-world concern. Not yet an engineering specification.</p>
+          </div>
+
+          <div className="input-note">
+            <span className="small-label">ILLUSTRATIVE CONTEXT</span>
+            <span>Rural setting · Cost constraint · Ongoing monitoring need</span>
+          </div>
+        </article>
+
+        <div className="ai-transfer" aria-hidden="true">
+          <Icon name="arrow" />
+        </div>
+
+        <article className="structured-report">
+          <header className="workbench-bar">
+            <span className="small-label">02 / SETU AI</span>
+            <span className="review-status">Review required</span>
+          </header>
+
+          <div className="ai-sequence" key={replay}>
+            <dl className="structured-fields">
+              {fields.map(([label, value], index) => (
+                <div
+                  className="sequence-item"
+                  style={{ '--delay': `${index * 90}ms` } as React.CSSProperties}
+                  key={label}
+                >
+                  <dt className="small-label">{label}</dt>
+                  <dd>
+                    {label === 'Priority' ? (
+                      <span className="priority-label">{value}</span>
+                    ) : (
+                      value
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div
+              className="engineering-brief sequence-item"
+              style={{ '--delay': '400ms' } as React.CSSProperties}
+            >
+              <span className="small-label">03 / ENGINEERING BRIEF</span>
+              <h3>
+                Develop an affordable system for continuous local
+                water-quality monitoring.
+              </h3>
+              <span className="brief-caption">
+                A clear starting point for technical evaluation.
+              </span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <p className="disclosure">
+        Illustrative transformation, not a live AI result. Location and priority
+        are demonstration inputs, not facts inferred from the quoted report.
+        AI-generated fields and proposed directions require review.
+      </p>
+    </Section>
+  );
+}
+
+function DemonstrationCase() {
+  return (
+    <Section
+      id="setu-case"
+      number="05"
+      label="FOLLOW THE PROBLEM"
+      title="ONE PROBLEM. ONE JOURNEY."
+      className="case-section"
+    >
+      <div className="case-intro">
+        <div>
+          <DemoBadge />
+          <h3>RURAL WATER QUALITY MONITORING</h3>
+          <p>
+            A community needs an affordable way to monitor the quality
+            of its local water source.
+          </p>
+        </div>
+
+        <div
+          className="water-schematic"
+          role="img"
+          aria-label="Concept: connect a local water source to monitoring and field evidence"
+        >
+          <div>
+            <span className="schematic-icon"><Icon name="water" /></span>
+            <span>Local source</span>
+          </div>
+          <i aria-hidden="true" />
+          <div>
+            <span className="schematic-icon"><Icon name="chart" /></span>
+            <span>Monitoring concept</span>
+          </div>
+          <i aria-hidden="true" />
+          <div>
+            <span className="schematic-icon"><Icon name="structure" /></span>
+            <span>Field evidence</span>
+          </div>
+        </div>
+      </div>
+
+      <ol className="case-trail" aria-label="Demonstration water challenge journey">
+        {DEMO_STEPS.map(([title, description], index) => (
+          <li key={title}>
+            <span className="case-dot" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h4>{title}</h4>
+            <p>{description}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div className="case-footer">
+        <p>
+          The destination: a verified outcome <strong>if the evidence supports it.</strong>
+        </p>
+        <span>Demonstration scenario · No deployment or impact claims</span>
+      </div>
+    </Section>
+  );
+}
+
+function CapabilityMatching() {
+  return (
+    <Section
+      id="setu-matching"
+      number="06"
+      label="CONNECTION, NOT JUST CATEGORISATION"
+      title="THE RIGHT PROBLEM MEETS THE RIGHT CAPABILITY."
+    >
+      <DemoBadge>Prototype scenario</DemoBadge>
+
+      <div className="matching-layout">
+        <div className="challenge-profile">
+          <span className="small-label">CHALLENGE</span>
+          <div className="challenge-title">
+            <Icon name="water" />
+            <h3>Water-quality monitoring</h3>
+          </div>
+          <p>Affordable, continuous monitoring for a local water source.</p>
+
+          <div className="capability-requirements">
+            <span className="small-label">REQUIRED CAPABILITIES</span>
+            <ul className="capability-list">
+              {CAPABILITIES.map((capability) => (
+                <li key={capability}>
+                  <span className="capability-dot" aria-hidden="true" />
+                  {capability}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="match-connector" aria-hidden="true">
+          <span />
+          <Icon name="match" />
+          <span />
+        </div>
+
+        <article className="match-profile">
+          <header>
+            <span className="small-label">ILLUSTRATIVE MATCH PROFILE</span>
+            <Icon name="match" />
+          </header>
+          <h3>University / Faculty / Student Team</h3>
+          <p className="match-status">HIGH CAPABILITY MATCH</p>
+
+          <dl className="match-reasons">
+            <div>
+              <dt>IoT</dt>
+              <dd>Sensor integration and connected devices</dd>
+            </div>
+            <div>
+              <dt>Environmental Engineering</dt>
+              <dd>Water-quality methods and field constraints</dd>
+            </div>
+            <div>
+              <dt>Data Analytics</dt>
+              <dd>Monitoring, interpretation and reporting</dd>
+            </div>
+          </dl>
+
+          <p className="match-note">
+            A capability profile, not a named partner or an actual assignment.
+          </p>
+        </article>
+      </div>
+
+      <p className="disclosure">
+        Matching can also consider resources, geography and project relevance.
+        The example label is illustrative, not a calculated match score.
+      </p>
+    </Section>
+  );
+}
+
+function Ecosystem() {
+  return (
+    <Section
+      id="setu-ecosystem"
+      number="07"
+      label="THE ECOSYSTEM"
+      title="THREE ACTORS. ONE OUTCOME."
+      className="ecosystem-section"
+    >
+      <p className="section-description">
+        Community context. Academic expertise. Industry enablement.
+        Connected through SETU.
+      </p>
+
+      <div className="ecosystem-map" aria-label="SETU ecosystem relationships">
+        <div className="ecosystem-community">
+          <span className="small-label">COMMUNITY</span>
+          <h3>“I have a problem.”</h3>
+          <p>Local knowledge, lived experience and feedback.</p>
+        </div>
+
+        <div className="eco-trunk" aria-hidden="true" />
+
+        <div className="ecosystem-hub">
+          <strong>SETU</strong>
+          <span>Structure the challenge. Connect the capabilities.</span>
+        </div>
+
+        <div className="eco-trunk" aria-hidden="true" />
+
+        <div className="eco-branches">
+          <article>
+            <span className="small-label">UNIVERSITY</span>
+            <h3>“I can build.”</h3>
+            <p>Faculty, students and researchers bring engineering expertise.</p>
+          </article>
+          <article>
+            <span className="small-label">INDUSTRY / CSR</span>
+            <h3>“I can enable.”</h3>
+            <p>
+              Potential funding, mentorship, technology and deployment support.
+            </p>
+          </article>
+        </div>
+
+        <div className="eco-merge" aria-hidden="true" />
+        <div className="eco-trunk" aria-hidden="true" />
+
+        <div className="ecosystem-pilot">
+          <Icon name="pin" />
+          <div>
+            <strong>FIELD PILOT</strong>
+            <span>Tested where the problem exists.</span>
+          </div>
+        </div>
+
+        <div className="eco-trunk" aria-hidden="true" />
+
+        <div className="ecosystem-outcome">
+          <Icon name="check" />
+          <div>
+            <strong>VERIFIED OUTCOME</strong>
+            <span>Requires evidence + community confirmation.</span>
+          </div>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Verification() {
+  const ref = useEnterOnce<HTMLDivElement>();
+
+  return (
+    <Section
+      id="setu-verification"
+      number="08"
+      label="PROOF, NOT JUST PROGRESS"
+      title={<>BUILD <span className="not-equal">≠</span> IMPACT.</>}
+    >
+      <div className="verification-intro">
+        <p className="section-description">
+          A prototype is only the beginning. SETU tracks what happens
+          when the solution reaches the field.
+        </p>
+        <span className="evidence-caption">EVIDENCE REQUIRED, NOT ASSUMED</span>
+      </div>
+
+      <div className="verification-content" ref={ref}>
+        <ul className="evidence-grid" aria-label="Verification evidence requirements">
+          {EVIDENCE.map(([icon, title, description], index) => (
+            <li
+              className="sequence-item"
+              style={{ '--delay': `${index * 80}ms` } as React.CSSProperties}
+              key={title}
+            >
+              <Icon name={icon} />
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </li>
+          ))}
+        </ul>
+
+        <div className="vso-panel">
+          <div className="vso-heading">
+            <div>
+              <span className="small-label">THE STANDARD SETU AIMS TO ESTABLISH</span>
+              <h3>VERIFIED SOCIETAL OUTCOME</h3>
+            </div>
+            <span className="vso-monogram" aria-hidden="true">VSO</span>
+          </div>
+
+          <Flow
+            className="evidence-flow"
+            label="Evidence chain for a verified societal outcome"
+            items={[
+              'Solution',
+              'Field Test',
+              'Evidence',
+              'Community Confirmation',
+              'Verified Outcome',
+            ]}
+          />
+
+          <p>
+            If the evidence is incomplete, the outcome remains unverified.
+            Building is a milestone. Proof closes the loop.
+          </p>
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function Comparison() {
+  const traditional = ['Complaint', 'Forwarded', 'Waiting'];
+  const setu = [
+    'Problem',
+    'AI Structuring',
+    'Capability Matching',
+    'Engineering',
+    'Pilot',
+    'Verification',
+  ];
+
+  return (
+    <Section
+      id="setu-difference"
+      number="09"
+      label="BEYOND COMPLAINT MANAGEMENT"
+      title="SETU DOESN'T STOP AT REPORTING."
+      className="comparison-section"
+    >
+      <div className="comparison-table">
+        <div className="comparison-row traditional-row">
+          <h3>TRADITIONAL</h3>
+          <ol aria-label="Traditional complaint pathway">
+            {traditional.map((item) => <li key={item}>{item}</li>)}
+          </ol>
+        </div>
+        <div className="comparison-row setu-row">
+          <h3>SETU</h3>
+          <ol aria-label="SETU solution creation pathway">
+            {setu.map((item) => <li key={item}>{item}</li>)}
+          </ol>
+        </div>
+      </div>
+
+      <p className="comparison-closing">
+        From complaint management to <span>solution creation.</span>
+      </p>
+    </Section>
+  );
+}
+
+function FinalCTA({ submitChallengeHref }: { submitChallengeHref: string }) {
+  return (
+    <ClickSpark
+      sparkColor="#9de7cf"
+      sparkSize={12}
+      sparkRadius={20}
+      sparkCount={8}
+      duration={400}
+    >
+      <section className="setu-cta" aria-labelledby="setu-cta-title">
+        <div className="setu-container">
+          <p className="eyebrow"><span>10</span> THE NEXT STEP IS YOURS</p>
+          <Reveal>
+            <h2 id="setu-cta-title">
+              DON'T JUST REPORT IT
+              <br />
+              <span>— SOLVE IT.</span>
+            </h2>
+          </Reveal>
+          <div className="cta-bottom">
+            <p>Have a problem worth solving?</p>
+            <Link className="primary-button" href={submitChallengeHref}>
+              SUBMIT A CHALLENGE
+              <Icon name="arrow" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </ClickSpark>
+  );
+}
+
+export default function HowItWorksPage() {
+  const { openAuth } = useAuthModal();
+  const reducedMotion = useReducedMotion();
+  usePageLenis(reducedMotion, false); // managed globally by LenisProvider
+
+  const submitChallengeHref = '/contact?reason=share-challenge';
+
+  return (
+    <MotionContext.Provider value={reducedMotion}>
+      {/* ── Staggered Mobile/Overlay Menu ── */}
       <StaggeredMenu
-        position="right"
         items={STAGGERED_MENU_ITEMS}
         socialItems={STAGGERED_SOCIAL_ITEMS}
         displaySocials={true}
@@ -224,14 +942,14 @@ export default function HowItWorksPage() {
         isFixed={true}
       />
 
-      {/* Header */}
+      {/* ── Fixed Global Header ── */}
       <header className="fixed top-0 left-0 right-0 h-[72px] z-30 flex items-center justify-between px-6 sm:px-12 bg-[#f5f6f1]/90 backdrop-blur-md border-b border-[#d9ddd5]">
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-bold tracking-wider text-sm text-[#101312] hover:opacity-70 transition-opacity"
+          className="flex items-center gap-2.5 font-bold tracking-wider text-sm text-[#101312] hover:opacity-75 transition-opacity"
           aria-label="Back to SETU home"
         >
-          <span className="w-8 h-8 rounded-full bg-[#101312] text-white font-serif flex items-center justify-center text-base font-normal">
+          <span className="w-8 h-8 rounded-full bg-[#101312] text-white font-serif flex items-center justify-center text-base font-normal shadow-sm">
             S
           </span>
           <span className="tracking-[0.16em] font-extrabold text-[14px]">SETU</span>
@@ -248,245 +966,25 @@ export default function HowItWorksPage() {
         </div>
       </header>
 
-      <main>
-        {/* ── PAGE HERO ── */}
-        <section
-          className="relative h-[80vh] flex flex-col justify-end pb-20 sm:pb-28 px-6 sm:px-12 text-white overflow-hidden"
-          aria-label="How SETU works"
-        >
-          {/* Background */}
-          <div className="absolute inset-0" aria-hidden="true">
-            <Image
-              src="/assets/valley.jpg"
-              alt="Wide valley representing the scale of communities SETU connects"
-              fill
-              priority
-              className="object-cover object-center saturate-[0.7] contrast-[1.06]"
-              sizes="100vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#090b0b]/90 via-[#090b0b]/50 to-[#090b0b]/10" />
-          </div>
-
-          <div className="relative z-10 max-w-[1180px] mx-auto w-full">
-            {/* Eyebrow */}
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#9de7cf] mb-5 flex items-center gap-3">
-              <span className="inline-block w-5 h-px bg-[#9de7cf]" />
-              The SETU Process — 5 Stages
-            </p>
-
-            {/* Headline */}
-            <h1
-              className="text-[clamp(3rem,7vw,7rem)] font-extrabold tracking-[-0.04em] leading-[0.9] text-white uppercase max-w-3xl"
-              style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-            >
-              From report
-              <br />
-              <span className="text-[#9de7cf]">to result.</span>
-            </h1>
-
-            <p className="mt-6 max-w-lg text-base sm:text-lg text-white/75 leading-relaxed font-light">
-              Every community challenge that enters SETU follows five stages — from a citizen&apos;s
-              first report to a field-tested, community-verified outcome.
-              No stage is skipped. No outcome is assumed.
-            </p>
-
-            {/* Flow indicator */}
-            <div className="mt-10 flex items-center gap-0 flex-wrap">
-              {STEPS.map((step, i) => (
-                <div key={step.num} className="flex items-center">
-                  <div className="font-mono text-[10px] text-white/50 uppercase tracking-widest px-3 py-1.5 border border-white/15 rounded-full">
-                    {step.verb}
-                  </div>
-                  {i < STEPS.length - 1 && (
-                    <span className="text-[#267f68] px-1.5 font-bold text-sm">→</span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Scroll hint */}
-          <div className="absolute bottom-8 right-10 sm:right-16 font-mono text-[10px] text-white/40 uppercase tracking-widest flex items-center gap-2">
-            <span>Scroll to explore</span>
-            <ArrowRight className="size-3" />
-          </div>
-        </section>
-
-        {/* ── HORIZONTAL SCROLL STEPS ── */}
-        <HorizontalSteps />
-
-        {/* ── PIPELINE SUMMARY (dark) ── */}
-        <section className="bg-[#090b0b] py-20 sm:py-28" aria-label="Process pipeline summary">
-          <div className="section-shell">
-            <p className="eyebrow text-[#9de7cf] mb-10 text-center">THE FULL PIPELINE</p>
-            <div className="grid grid-cols-1 sm:grid-cols-5 gap-0 border border-white/10 rounded-2xl overflow-hidden">
-              {STEPS.map((step, i) => (
-                <div
-                  key={step.num}
-                  className={`p-6 sm:p-8 border-b sm:border-b-0 sm:border-r border-white/10 last:border-0 flex flex-col gap-3 ${
-                    i % 2 === 0 ? 'bg-white/[0.03]' : 'bg-transparent'
-                  }`}
-                >
-                  <span className="font-mono text-[10px] text-[#9de7cf] font-bold tracking-[0.18em]">
-                    {step.num}
-                  </span>
-                  <div
-                    className="text-xl font-extrabold text-white uppercase tracking-tight"
-                    style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                  >
-                    {step.verb}
-                  </div>
-                  <p className="text-[12px] text-[#89918c] leading-relaxed">{step.headline}</p>
-                  <div className="mt-auto">
-                    <span className="font-mono text-[9px] text-white/30 uppercase tracking-wider border border-white/10 px-2.5 py-1 rounded-full">
-                      {step.tag}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── WHO DOES WHAT (stakeholders) ── */}
-        <section className="py-20 sm:py-28 bg-[#f5f6f1] border-b border-[#d9ddd5]" aria-label="Stakeholder roles">
-          <div className="section-shell">
-            <div className="flex justify-between items-end flex-wrap gap-5 pb-10 border-b border-[#d9ddd5] mb-10">
-              <div>
-                <p className="eyebrow text-[#267f68] flex items-center gap-2.5 mb-3">
-                  <span className="inline-block w-5 h-px bg-[#267f68]" />
-                  Who participates
-                </p>
-                <h2
-                  className="text-[clamp(2rem,5vw,3.8rem)] font-extrabold tracking-[-0.03em] leading-[0.95] text-[#101312] uppercase"
-                  style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                >
-                  Three actors.
-                </h2>
-              </div>
-              <span className="text-[#6f7772] font-mono text-xs tracking-wider uppercase">(every loop needs all three)</span>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  role: 'Citizen / Community',
-                  num: '01',
-                  color: '#267f68',
-                  actions: [
-                    'Submit challenges with location & evidence',
-                    'Provide context, photos, and witnesses',
-                    'Track challenge progress in real time',
-                    'Confirm the outcome at the end',
-                  ],
-                  cta: 'Submit a Problem',
-                  href: '/contact?reason=share-challenge',
-                },
-                {
-                  role: 'University / Faculty',
-                  num: '02',
-                  color: '#101312',
-                  actions: [
-                    'Discover validated, engineering-ready briefs',
-                    'Match challenges to institutional capability',
-                    'Lead student-faculty R&D sprints',
-                    'Deploy and document field pilots',
-                  ],
-                  cta: 'Partner with SETU',
-                  href: '/for-universities-industry',
-                },
-                {
-                  role: 'CSR / Industry',
-                  num: '03',
-                  color: '#89918c',
-                  actions: [
-                    'Fund promising solutions at pilot stage',
-                    'Provide technical mentorship to student teams',
-                    'Support field deployment and scaling',
-                    'Gain verified societal impact reports',
-                  ],
-                  cta: 'Explore Partnership',
-                  href: '/for-universities-industry',
-                },
-              ].map((actor) => (
-                <div
-                  key={actor.role}
-                  className="border border-[#d9ddd5] rounded-2xl p-7 flex flex-col gap-5 hover:border-[#267f68] hover:shadow-lg transition-all duration-300 group"
-                >
-                  <div className="flex items-start justify-between">
-                    <span className="font-mono text-[10px] text-[#6f7772] tracking-wider">{actor.num}</span>
-                    <div
-                      className="w-2.5 h-2.5 rounded-full mt-1"
-                      style={{ background: actor.color }}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <h3
-                    className="text-lg font-bold tracking-tight text-[#101312]"
-                    style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-                  >
-                    {actor.role}
-                  </h3>
-                  <ul className="space-y-2.5 flex-1">
-                    {actor.actions.map((action) => (
-                      <li key={action} className="flex items-start gap-2.5 text-sm text-[#59615c]">
-                        <span className="text-[#267f68] mt-0.5 shrink-0 font-bold">→</span>
-                        <span>{action}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={actor.href}
-                    className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-[#267f68] hover:gap-3 transition-all mt-2 group-hover:underline"
-                  >
-                    <span>{actor.cta}</span>
-                    <ArrowRight className="size-3.5" />
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA ── */}
-        <section className="py-24 sm:py-32 section-shell text-center" aria-label="Call to action">
-          <p className="eyebrow text-[#6f7772] mb-6">DON&apos;T JUST REPORT IT — SOLVE IT</p>
-          <h2
-            className="text-[clamp(2.4rem,6vw,5rem)] font-extrabold tracking-[-0.03em] leading-[0.95] text-[#101312] uppercase"
-            style={{ fontFamily: 'var(--font-heading), sans-serif' }}
-          >
-            Have a problem
-            <br />
-            <span
-              className="font-normal text-[#267f68] normal-case"
-              style={{ fontFamily: 'var(--font-lora), Georgia, serif', fontStyle: 'italic' }}
-            >
-              worth engineering?
-            </span>
-          </h2>
-          <p className="mt-6 max-w-md mx-auto text-base sm:text-lg text-[#59615c] leading-relaxed">
-            SETU doesn&apos;t collect feedback. It builds a verified path from your community&apos;s problem to a field-tested solution.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/contact?reason=share-challenge"
-              className="inline-flex items-center gap-2 bg-[#267f68] hover:bg-[#18372e] text-white px-8 py-4 rounded-full text-xs font-mono uppercase tracking-wider transition-all shadow-lg hover:shadow-xl"
-            >
-              <span>Submit a Problem</span>
-              <ArrowUpRight className="size-4" />
-            </Link>
-            <Link
-              href="/explore-challenges"
-              className="inline-flex items-center gap-2 border border-[#d9ddd5] hover:border-[#101312] text-[#101312] px-8 py-4 rounded-full text-xs font-mono uppercase tracking-wider transition-all"
-            >
-              <span>Explore Challenges</span>
-              <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </section>
+      {/* ── Main How It Works Narrative ── */}
+      <main
+        id="setu-how-it-works"
+        className={`setu-how ${reducedMotion ? 'motion-reduced' : 'motion-enabled'}`}
+      >
+        <Hero />
+        <Problem />
+        <Journey />
+        <AIInAction />
+        <DemonstrationCase />
+        <CapabilityMatching />
+        <Ecosystem />
+        <Verification />
+        <Comparison />
+        <FinalCTA submitChallengeHref={submitChallengeHref} />
       </main>
 
+      {/* ── Global Site Footer ── */}
       <SiteFooter />
-    </div>
+    </MotionContext.Provider>
   );
 }
